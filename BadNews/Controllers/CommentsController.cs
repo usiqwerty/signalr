@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using BadNews.Models.Comments;
 using BadNews.Repositories.Comments;
 using Microsoft.AspNetCore.Mvc;
@@ -18,6 +19,10 @@ public class CommentsController : ControllerBase
     [HttpGet("api/news/{id}/comments")]
     public ActionResult<CommentsDto> GetCommentsForNews(Guid newsId)
     {
-        return new JsonResult(commentsRepository.GetComments(newsId));
+        return new JsonResult(
+            new Dictionary<string, object>
+            {
+                {"comments", commentsRepository.GetComments(newsId)}
+            });
     }
 }

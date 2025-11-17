@@ -1,5 +1,6 @@
 ﻿@using BadNews.Elevation
 @model BadNews.Models.News.FullArticleModel
+<script src="/lib/jquery/dist/jquery.min.js"></script>
 
 <main role="main" class="container">
     <div class="row">
@@ -12,12 +13,27 @@
                 @if (ViewContext.IsElevated())
                 {
                     <form class="mb-4" onsubmit="return confirm('Удалить новость?')"
-                        asp-controller="Editor" asp-action="DeleteArticle" asp-route-id="@(Model.Article.Id)">
+                          asp-controller="Editor" asp-action="DeleteArticle" asp-route-id="@(Model.Article.Id)">
                         <button type="submit" class="btn-danger">Удалить</button>
                     </form>
                 }
                 @Html.Raw(Model.Article.ContentHtml)
             </div>
+            <h5>Комментарии</h5>
+            <div id="comments"></div>
+            
+            <form>
+                <h5>Написать комментарий</h5>
+                <label>
+                    Пользователь <input id="userInput">
+                </label>
+                <label>
+                    Комментарий <input id="commentInput">
+                </label>
+                <div>
+                    <button type="button" id="sendButton">Отправить</button>
+                </div>
+            </form>
         </div>
 
         <aside class="col-md-4 news-sidebar">
@@ -26,6 +42,18 @@
         </aside>
     </div>
 </main>
+
+<script type="text/javascript">
+    $.get(`/api/news/@Model.Article.Id.ToString()/comments`, function(data) {
+        const commentsDiv = document.getElementById('comments');
+        
+        for (const comment of data.comments) {
+            const li = document.createElement("li");
+            li.textContent = `${comment.user} говорит: ${comment.value}`;
+            commentsDiv.appendChild(li);
+        }
+    });
+</script>
 
 <footer class="news-footer">
     <p>
