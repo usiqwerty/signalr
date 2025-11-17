@@ -13,10 +13,12 @@
     <div>
         <button @onclick="Send">Отправить</button>
     </div>
+    <ul>
     @foreach (var comment in comments)
     {
         <li>@RenderComment(comment)</li>
     }
+    </ul>
 </div>
 
 @code {
